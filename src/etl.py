@@ -18,8 +18,15 @@ def load_raw_data(source: str | Path) -> pd.DataFrame:
     source = Path(source)
     if not source.exists():
         raise FileNotFoundError(f"Rohdatendatei nicht gefunden: {source}")
-    return pd.read_csv(source)
 
+    dtype_overrides = {
+        "account": "string",
+        "contra_account": "string",
+        "cost_center": "string",
+        "document_number": "string",
+        "transaction_id": "string",
+    }
+    return pd.read_csv(source, dtype=dtype_overrides)
 
 
 # Transform — Standardise data types
