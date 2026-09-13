@@ -23,7 +23,7 @@ class GeneratorConfig:
     start_date: datetime = datetime(2004, 6, 14)
     end_date: datetime = datetime(2026, 6, 14)
 
-    currencies: tuple[str, ...] = ("EUR", "USD", "YEN", "GBP")
+    currencies: tuple[str, ...] = ("EUR", "USD", "JPY", "GBP")
     accounts: tuple[str, ...] = tuple(str(a) for a in range(4000, 4100, 5))         # 20 Expense account
     contra_accounts: tuple[str, ...] = tuple(str(a) for a in range(1000, 1100, 5))  # 20 Contra account
     cost_centers: tuple[str, ...] = tuple(f"CC-{i:03d}" for i in range(1, 21))      # 20 Cost centres
