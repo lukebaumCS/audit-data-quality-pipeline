@@ -52,12 +52,8 @@ def standardize_types(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # Transform — Detect duplicates
-def flag_duplicates(df: pd.DataFrame) -> pd.DataFrame:
-    """Markiert fachliche Duplikate: gleiche Kernfelder + gleiches Buchungsdatum.
 
-    Bewusst ohne exakte Uhrzeit im Schlüssel, da echte Doppelbuchungen oft
-    minimal versetzt eingegeben werden.
-    """
+def flag_duplicates(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     key_fields = DUPLICATE_KEY_FIELDS + ["booking_date"]
 
