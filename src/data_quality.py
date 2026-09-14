@@ -60,9 +60,20 @@ class DataQualityChecker:
         return pd.Series(True, index=df.index)
 
     def check_valid_date(self, df: pd.DataFrame) -> pd.Series:
-        dt = pd.to_datetime(df["booking_datetime"], errors="coerce")
-        in_range = dt.between(self.config.date_min, self.config.date_max)
-        return dt.notna() & in_range
+        dt = pd.to_datetime(
+            df["booking_datetime"],
+            errors="coerce",
+            format="mixed",
+        )
+
+        min_date = pd.Timestamp(self.config.date_min).date()
+        max_date = pd.Timestamp(self.config.date_max).date()
+
+        return (
+            dt.notna()
+            & (dt.dt.date >= min_date)
+            & (dt.dt.date <= max_date)
+        )
 
     def check_valid_amount(self, df: pd.DataFrame) -> pd.Series:
         amount = pd.to_numeric(df["amount"], errors="coerce")
@@ -128,17 +139,26 @@ def run_data_quality(
     db_path: str | Path,
     table_name: str = "transactions_clean",
     summary_log_path: str | Path = "data/processed/dq_score_history.csv",
+    config: DataQualityConfig | None = None,
 ) -> dict:
     df = load_from_db(db_path, table_name)
-    checker = DataQualityChecker()
+    checker = DataQualityChecker(config)
     df = checker.run_checks(df)
     summary = checker.summarize(df)
+
     append_summary_log(summary, summary_log_path)
 
     print(f"Data-Quality-Score dieses Laufs: {summary['overall_score_pct']}%")
-    print(f"Zeilen ohne jeden Verstoß: {summary['rows_passing_all_checks_pct']}%")
+    print(
+        f"Zeilen ohne jeden Verstoß: "
+        f"{summary['rows_passing_all_checks_pct']}%"
+    )
+
     for check_name in CHECK_NAMES:
-        print(f"  {check_name}: {summary[f'{check_name}_pass_rate_pct']}% bestanden")
+        print(
+            f"  {check_name}: "
+            f"{summary[f'{check_name}_pass_rate_pct']}% bestanden"
+        )
 
     return summary
 

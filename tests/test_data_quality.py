@@ -584,6 +584,7 @@ class TestDataQualityChecker(unittest.TestCase):
                 db_path=db_path,
                 table_name="transactions_clean",
                 summary_log_path=log_path,
+                config=self.config,
             )
 
             self.assertIsInstance(
