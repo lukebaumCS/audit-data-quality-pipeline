@@ -6,7 +6,7 @@ from tempfile import TemporaryDirectory
 
 import pandas as pd
 
-from data_quality import (
+from src.data_quality import (
     CHECK_NAMES,
     DataQualityConfig,
     DataQualityChecker,
