@@ -1,6 +1,6 @@
 # Financial Data Quality & Anomaly Detection Pipeline
 
-A small, self-contained data engineering and analytics pipeline that generates
+A small, self contained data engineering and analytics pipeline that generates
 synthetic financial transactions (journal entries), runs them through an ETL
 process, checks data quality, and flags anomalous transactions using rule-based
 detection with a Streamlit dashboard for exploration.
@@ -19,8 +19,8 @@ flowchart LR
     A[generator.py<br/>synthetic journal entries] -->|CSV| B[data/raw/]
     B --> C[etl.py<br/>type standardization,<br/>duplicate detection]
     C -->|SQLite| D[(transactions_clean)]
-    D --> E[data_quality.py<br/>6 quality checks,<br/>per-run score]
-    D --> F[anomaly_detection.py<br/>5 rule-based checks]
+    D --> E[data_quality.py<br/>6 quality checks,<br/>per run score]
+    D --> F[anomaly_detection.py<br/>5 rule based checks]
     F -->|SQLite| G[(transactions_flagged)]
     E -->|CSV log| H[dq_score_history.csv]
     G --> I[dashboard.py<br/>Streamlit]
@@ -39,7 +39,7 @@ audit-data-quality-pipeline/
 ├── src/
 │   ├── generator.py             # synthetic transaction data generator
 │   ├── etl.py                   # extract, standardize, detect duplicates, load to SQLite
-│   ├── data_quality.py          # data quality checks + per-run score log
+│   ├── data_quality.py          # data quality checks + per run score log
 │   ├── anomaly_detection.py     # rule based anomaly detection
 │   ├── dashboard.py             # Streamlit dashboard
 ├── tests/                       # pytest unit tests
