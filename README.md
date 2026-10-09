@@ -3,7 +3,7 @@
 A small, self-contained data engineering and analytics pipeline that generates
 synthetic financial transactions (journal entries), runs them through an ETL
 process, checks data quality, and flags anomalous transactions using rule-based
-detection — with a Streamlit dashboard for exploration.
+detection with a Streamlit dashboard for exploration.
 
 The project is inspired by the kind of data work done in **audit technology /
 digital audit innovation** teams: taking messy transactional data from
@@ -108,7 +108,7 @@ script.
 ### 1. Synthetic Data Generation (`generator.py`)
 Generates ~100,000 journal entries (booking date, account, contra account,
 amount, currency, cost center, clerk, text, payment type) using `Faker`, with
-a configurable set of injected anomalies and a **ground-truth label**
+a configurable set of injected anomalies and a **ground truth label**
 (`is_anomaly`, `anomaly_type`) per row, enabling later evaluation against
 known outcomes.
 
@@ -118,7 +118,7 @@ combinations, and missing required fields.
 
 ### 2. ETL (`etl.py`)
 Extract → Transform → Load. Reads the raw CSV (with explicit `dtype`
-overrides so numeric-looking IDs like account codes aren't coerced to
+overrides so numeric looking IDs like account codes aren't coerced to
 floats), standardizes types, flags duplicate transactions based on business
 key fields (account, contra account, amount, cost center, clerk, booking
 date) and writes the result to a local SQLite database.
@@ -129,16 +129,16 @@ valid dates, valid amounts, valid accounts (against the known chart of
 accounts), and field consistency and aggregates them into a per run
 Data Quality Score, logged over time in `dq_score_history.csv`.
 
-### 4. Rule-Based Anomaly Detection (`anomaly_detection.py`)
-Five explainable, independently-configurable rules:
+### 4. Rule Based Anomaly Detection (`anomaly_detection.py`)
+Five explainable, independently configurable rules:
 
 | Rule | Logic |
 |---|---|
-| Duplicate transactions | Reuses ETL's business-key duplicate flag |
+| Duplicate transactions | Reuses ETL's business key duplicate flag |
 | Weekend / night postings | Booking outside Mon–Fri, 06:00–20:00 |
 | Round amounts | Amount ≥ €500 and evenly divisible by €500 |
 | Unusually high amounts | Amount above the 99th percentile |
-| Unusual account–clerk combinations | Data-driven: flags account/clerk pairs that occur in less than 2% of that clerk's transactions learned from the data itself, not from any generator internal mapping |
+| Unusual account–clerk combinations | Data driven: flags account/clerk pairs that occur in less than 2% of that clerk's transactions learned from the data itself, not from any generator internal mapping |
 
 Each flagged transaction records *which* rule(s) fired, laying the
 groundwork for a weighted Risk Score in a later phase. An informal
